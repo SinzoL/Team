@@ -1,0 +1,29 @@
+{
+  "2025": [
+    { "name": "数字中国创新大赛 数字安全赛道 华南赛区初赛", "rank": "Rank: 1" },
+    { "name": "CISCN x CCB 华南分区决赛", "rank": "Rank: 10" },
+    { "name": "CISCN x CCB 初赛", "rank": "Rank: 127" }
+  ],
+  "2024": [
+    { "name": "niteCTF", "rank": "Rank: 23/1174" },
+    { "name": "鹏城杯", "rank": "初赛排名 60 | 决赛——攻击排名：32/60 | 决赛——防御排名：8/60" },
+    { "name": "长城杯", "rank": "Rank: 38 (获得决赛资格)" },
+    { "name": "BaseCTF", "rank": "Rank: 10/2037" },
+    { "name": "羊城杯决赛", "rank": "Rank: 12/18 (优胜奖)" },
+    { "name": "羊城杯初赛", "rank": "Rank: 18/500" },
+    { "name": "中国工业互联网安全大赛智能家居赛道线下决赛", "rank": "Rank: 13/30 (优秀奖)" },
+    { "name": "TFCCTF", "rank": "Rank: 50/1452" },
+    { "name": "UIUCTF", "rank": "Rank: 129/959" },
+    { "name": "CISCN 华南分区决赛", "rank": "Rank: 19/50 (二等奖)" },
+    { "name": "广东省赛决赛", "rank": "Rank: 14/30 (二等奖)" },
+    { "name": "中国海洋大学信息安全竞赛", "rank": "Rank: 1 (一等奖)" },
+    { "name": "polarCTF 夏季挑战赛", "rank": "Rank: 4/118 (二等奖)" },
+    { "name": "Dragon Knight CTF", "rank": "Rank: 6 (三等奖)" },
+    { "name": "CISCN 初赛", "rank": "Rank: 296/2000" },
+    { "name": "XYCTF", "rank": "Rank: 12 (三等奖)" },
+    { "name": "复兴杯 决赛", "rank": "三等奖" }
+  ],
+  "2023": [
+    { "name": "CISCN 华南分区赛", "rank": "三等奖" }
+  ]
+}

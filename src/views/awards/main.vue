@@ -22,7 +22,22 @@
 
         <!-- 按年份分组的获奖列表 -->
         <div class="awards-content">
+            <!-- 加载状态 -->
+            <div v-if="loading" class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>正在加载比赛数据...</p>
+            </div>
+            
+            <!-- 错误状态 -->
+            <div v-else-if="error" class="error-container">
+                <div class="error-icon">⚠️</div>
+                <p>{{ error }}</p>
+                <button @click="loadCompetitionsData" class="retry-btn">重新加载</button>
+            </div>
+            
+            <!-- 数据展示 -->
             <div 
+                v-else
                 v-for="yearData in sortedCompetitionsArray" 
                 :key="yearData.year" 
                 class="year-section"
@@ -56,45 +71,51 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
-const competitionsData = {
-    "2025": [
-        { name: "数字中国创新大赛 数字安全赛道 华南赛区初赛", rank: "Rank: 1" },
-        { name: "CISCN x CCB 华南分区决赛", rank: "Rank: 10" },
-        { name: "CISCN x CCB 初赛", rank: "Rank: 127" }
-    ],
-    "2024": [
-        { name: "niteCTF", rank: "Rank: 23/1174" },
-        { name: "鹏城杯", rank: "初赛排名 60 | 决赛——攻击排名：32/60 | 决赛——防御排名：8/60" },
-        { name: "长城杯", rank: "Rank: 38 (获得决赛资格)" },
-        { name: "BaseCTF", rank: "Rank: 10/2037" },
-        { name: "羊城杯决赛", rank: "Rank: 12/18 (优胜奖)" },
-        { name: "羊城杯初赛", rank: "Rank: 18/500" },
-        { name: "中国工业互联网安全大赛智能家居赛道线下决赛", rank: "Rank: 13/30 (优秀奖)" },
-        { name: "TFCCTF", rank: "Rank: 50/1452" },
-        { name: "UIUCTF", rank: "Rank: 129/959" },
-        { name: "CISCN 华南分区决赛", rank: "Rank: 19/50 (二等奖)" },
-        { name: "广东省赛决赛", rank: "Rank: 14/30 (二等奖)" },
-        { name: "中国海洋大学信息安全竞赛", rank: "Rank: 1 (一等奖)" },
-        { name: "polarCTF 夏季挑战赛", rank: "Rank: 4/118 (二等奖)" },
-        { name: "Dragon Knight CTF", rank: "Rank: 6 (三等奖)" },
-        { name: "CISCN 初赛", rank: "Rank: 296/2000" },
-        { name: "XYCTF", rank: "Rank: 12 (三等奖)" },
-        { name: "复兴杯 决赛", rank: "三等奖" }
-    ],
-    "2023": [
-        { name: "CISCN 华南分区赛", rank: "三等奖" }
-    ]
+// 响应式数据
+const competitionsData = ref({})
+const loading = ref(true)
+const error = ref(null)
+
+// 从外部文件加载比赛数据
+const loadCompetitionsData = async () => {
+    try {
+        loading.value = true
+        const response = await fetch('/data/competitions.json')
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const data = await response.json()
+        competitionsData.value = data
+    } catch (err) {
+        console.error('加载比赛数据失败:', err)
+        error.value = '加载数据失败，请稍后重试'
+        // 提供备用数据
+        competitionsData.value = {
+            "2025": [
+                { name: "数据加载中...", rank: "请稍候" }
+            ]
+        }
+    } finally {
+        loading.value = false
+    }
 }
+
+// 组件挂载时加载数据
+onMounted(() => {
+    loadCompetitionsData()
+})
 
 // 计算总统计信息
 const totalCompetitions = computed(() => {
-    return Object.values(competitionsData).flat().length
+    if (!competitionsData.value || Object.keys(competitionsData.value).length === 0) return 0
+    return Object.values(competitionsData.value).flat().length
 })
 
 const totalAwards = computed(() => {
-    return Object.values(competitionsData).flat().filter(comp => 
+    if (!competitionsData.value || Object.keys(competitionsData.value).length === 0) return 0
+    return Object.values(competitionsData.value).flat().filter(comp => 
         comp.rank.includes('奖') || 
         comp.rank.includes('优胜') || 
         comp.rank.includes('优秀') ||
@@ -103,7 +124,8 @@ const totalAwards = computed(() => {
 })
 
 const topRankings = computed(() => {
-    return Object.values(competitionsData).flat().filter(comp => 
+    if (!competitionsData.value || Object.keys(competitionsData.value).length === 0) return 0
+    return Object.values(competitionsData.value).flat().filter(comp => 
         comp.rank.match(/rank:\s*[1-9](?![0-9])/i) ||
         comp.rank.includes('一等奖')
     ).length
@@ -111,7 +133,11 @@ const topRankings = computed(() => {
 
 // 按年份倒序排列的比赛数据
 const sortedCompetitionsArray = computed(() => {
-    const entries = Object.entries(competitionsData)
+    if (!competitionsData.value || Object.keys(competitionsData.value).length === 0) {
+        return []
+    }
+    
+    const entries = Object.entries(competitionsData.value)
     const sortedEntries = entries.sort((a, b) => {
         return parseInt(b[0]) - parseInt(a[0]) // 年份倒序：2025 → 2024 → 2023
     })
@@ -345,6 +371,59 @@ const showMoreDetails = (competition) => {
 
 .more-btn:hover::before {
     left: 100%;
+}
+
+/* 加载和错误状态 */
+.loading-container, .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(38, 238, 225, 0.3);
+    border-top: 3px solid #26eee1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-container p, .error-container p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.error-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.retry-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #26eee1, #6187da);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(38, 238, 225, 0.3);
 }
 
 /* 响应式设计 */
