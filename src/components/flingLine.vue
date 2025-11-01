@@ -2,12 +2,19 @@
 const particlesLoaded = async container => {
   console.log("Particles container loaded", container);
 };
+
+const particlesInit = async engine => {
+  console.log("Particles engine initialized", engine);
+};
 </script>
 
 <template>
-  
-  <div id="app">
-    <vue-particles id="tsparticles" @particles-loaded="particlesLoaded" :options="{
+  <div class="particles-container">
+    <Particles 
+      id="tsparticles" 
+      @particles-loaded="particlesLoaded"
+      @particles-init="particlesInit"
+      :options="{
       background: {
         color: {
           value: 'transparent'
@@ -82,8 +89,14 @@ const particlesLoaded = async container => {
 </template>
 
 <style scoped>
-.read-the-docs {
-  color: #888;
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
 }
 
 #tsparticles {
@@ -92,7 +105,26 @@ const particlesLoaded = async container => {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1; /* 将粒子特效放在背景层 */
-  pointer-events: none; /* 禁用粒子特效的交互 */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 性能优化 */
+#tsparticles canvas {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .particles-container {
+    display: none; /* 在移动端隐藏粒子效果以提升性能 */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particles-container {
+    display: none; /* 为有运动敏感的用户隐藏动画 */
+  }
 }
 </style>

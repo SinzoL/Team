@@ -50,9 +50,51 @@ watch(typedStrings, (newValue) => {
   
 }
 /* 移动端适配 */
+@media (max-width: 1024px) {
+  .content {
+    font-size: 4rem;
+    padding: 15px;
+  }
+  
+  .typing {
+    margin-top: 50px;
+  }
+}
+
 @media (max-width: 768px) {
   .content {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    padding: 10px;
+  }
+  
+  .typing {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    font-size: 1.8rem;
+    padding: 10px 5px;
+  }
+  
+  .static-text {
+    line-height: 1.2;
+  }
+  
+  .typing {
+    margin-top: 20px;
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .content {
+    font-size: 1.4rem;
+  }
+  
+  .typing {
+    font-size: 1.2rem;
   }
 }
 </style>

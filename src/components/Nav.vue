@@ -1,189 +1,288 @@
 <template>
     <div class="top-nav">
         <div class="container">
-            <ul class="menu">
-                <div> <img class="logo" src="@/assets/bg/webicon.png" /> </div>
-                <div class="logo">Del0n1x</div>
-                <li class="menu-item current">
-                    <router-link to="/home" active-class="active-menu">
-                        <span class="mask mask-top">Home</span>
-                        <span class="mask mask-bottom">Home</span>
-                    </router-link>
-                </li>
-                <li class="menu-item member">
-                    <router-link to="/mem" active-class="active-menu">
-                        <span class="mask mask-top">Members</span>
-                        <span class="mask mask-bottom">Members</span>
-                    </router-link>
-                </li>
-                <li class="menu-item awards">
-                    <router-link to="/awards" active-class="active-menu">
-                        <span class="mask mask-top">Awards</span>
-                        <span class="mask mask-bottom">Awards</span>
-                    </router-link>
-                </li>
-
-                <li class="menu-item Wp">
-                    <a target="_blank" href="https://drive.del0n1x.com/">
-                        <span class="mask mask-top">Tools</span>
-                        <span class="mask mask-bottom">Tools</span>
-                    </a>
-                </li>
-
-                <li class="menu-item Wp">
-                    <a target="_blank" href="https://www.yuque.com/keyboard-ovrmx/scxvuu">
-                        <span class="mask mask-top">WriteUp</span>
-                        <span class="mask mask-bottom">WriteUp</span>
-                    </a>
-                </li>
-            </ul>
+            <!-- Logo 区域 -->
+            <div class="nav-brand">
+                <img class="logo-img" src="@/assets/bg/webicon.png" alt="Del0n1x Logo" />
+                <div class="logo-text">Del0n1x</div>
+            </div>
+            
+            <!-- 桌面端菜单 -->
+            <nav class="desktop-menu">
+                <router-link to="/home" class="nav-link" active-class="active">Home</router-link>
+                <router-link to="/mem" class="nav-link" active-class="active">Members</router-link>
+                <router-link to="/awards" class="nav-link" active-class="active">Awards</router-link>
+                <a href="https://drive.del0n1x.com/" target="_blank" class="nav-link" rel="noopener noreferrer">Tools</a>
+                <a href="https://www.yuque.com/keyboard-ovrmx/scxvuu" target="_blank" class="nav-link" rel="noopener noreferrer">WriteUp</a>
+            </nav>
+            
+            <!-- 移动端菜单按钮 -->
+            <button class="mobile-menu-btn" @click="toggleMobileMenu" :class="{ active: isMobileMenuOpen }">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div class="mobile-menu" :class="{ 'mobile-open': isMobileMenuOpen }">
+            <router-link to="/home" class="mobile-nav-link" active-class="active" @click="closeMobileMenu">Home</router-link>
+            <router-link to="/mem" class="mobile-nav-link" active-class="active" @click="closeMobileMenu">Members</router-link>
+            <router-link to="/awards" class="mobile-nav-link" active-class="active" @click="closeMobileMenu">Awards</router-link>
+            <a href="https://drive.del0n1x.com/" target="_blank" class="mobile-nav-link" rel="noopener noreferrer">Tools</a>
+            <a href="https://www.yuque.com/keyboard-ovrmx/scxvuu" target="_blank" class="mobile-nav-link" rel="noopener noreferrer">WriteUp</a>
         </div>
     </div>
 </template>
 
+<script setup>
+import { ref } from 'vue'
+
+const isMobileMenuOpen = ref(false)
+
+const toggleMobileMenu = () => {
+    isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+    isMobileMenuOpen.value = false
+}
+</script>
 
 <style scoped>
+/* 基础样式 */
 .top-nav {
     position: fixed;
-    z-index: 1000;
-    background-color: black;
-}
-
-.menu {
-    display: flex;
-    justify-content: flex-start;
-    /* 左对齐 */
-    list-style-type: none;
-    padding: 0;
-    align-items: center;
-    /* 确保菜单项垂直居中 */
-}
-
-.menu-item {
-    position: relative;
-    /* 确保子元素相对于这个元素定位 */
-    font-size: 21px;
-    margin-left: 10px;
-    white-space: nowrap;
-    /* 防止文本自动换行 */
-    text-align: center;
-    margin-top: -50px;
-}
-
-.menu-item a {
-    text-decoration: none;
-    display: inline-block;
-    position: relative;
-    width: 138px;
-    /* 增加宽度，确保文本显示完整 */
-    padding: 0 10px;
-    /* 给文本留出一些空间 */
-    font-weight: bold;
-    color: rgba(38, 238, 225, 0.5);
-}
-
-.mask {
-    font-size: 28px;
-    display: block;
-    font-family: 'Gohu';
-    position: absolute;
-    width: 100%;
     top: 0;
     left: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    /* 防止换行 */
-    text-overflow: ellipsis;
-    /* 超出部分用省略号表示 */
-    transition: all 1.0s cubic-bezier(0.475, 0.885, 0.32, 1.275); /* 弹性过渡效果 */
-    /* 添加平滑过渡 */
-}
-.menu-item a:hover .mask {
-    animation: bounce 0.8s;
-}
-/* TODO: 抖动检测 */
-@keyframes bounce {
-    0% {
-        transform: translateY(0) scale(1);
-    }
-    30% {
-        transform: translateY(-15px) scale(1.1);
-    }
-    50% {
-        transform: translateY(0) scale(1);
-    }
-    70% {
-        transform: translateY(-7px) scale(1.05);
-    }
-    100% {
-        transform: translateY(0) scale(1);
-    }
+    right: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    height: 70px;
+    border-bottom: 1px solid rgba(38, 238, 225, 0.1);
 }
 
-/* mask-top 默认显示，mask-bottom 默认隐藏 */
-.mask-top {
-    opacity: 1;
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
 }
 
-.mask-bottom {
-    opacity: 0;
-    top: 100%;
-    /* 初始状态时，位于下方 */
+/* Logo 区域 */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
 }
 
-.menu-item a:hover .mask-top {
-    opacity: 0;
-    /* 鼠标悬浮时，隐藏上面的文本 */
-    transform: translateY(-100%);
-    /* 向上移动 */
+.logo-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
 }
 
-.menu-item a:hover .mask-bottom {
-    opacity: 1;
-    /* 鼠标悬浮时，显示下面的文本 */
-    transform: translateY(0);
-    /* 向上移动到显示区域 */
-}
-
-.logo {
-    font-family: 'JetBrains Mono';
-    font-size: 28px;
-    margin-left: 20px;
-    display: inline-block;
-    /* 确保 logo 跟其他菜单项在一行 */
-    vertical-align: middle;
-    /* 确保 logo 在菜单项垂直居中 */
+.logo-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
     color: rgb(38, 238, 225);
+    font-weight: bold;
 }
 
-.active-menu .mask-bottom{
-    font-weight: bold;
-    border-bottom: 4px solid #26eee1;
+/* 桌面端菜单 */
+.desktop-menu {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-left: 60px;
 }
 
-.active-menu .mask-top{
-    font-weight: bold;
-    border-bottom: 4px solid #26eee1;
+.nav-link {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+    white-space: nowrap;
 }
+
+.nav-link:hover {
+    color: rgb(38, 238, 225);
+    background-color: rgba(38, 238, 225, 0.1);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    color: rgb(38, 238, 225);
+    background-color: rgba(38, 238, 225, 0.15);
+    border-bottom: 2px solid rgb(38, 238, 225);
+}
+
+/* 移动端菜单按钮 */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.mobile-menu-btn span {
+    width: 100%;
+    height: 3px;
+    background-color: rgb(38, 238, 225);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+}
+
+/* 移动端菜单 */
+.mobile-menu {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.98);
+    backdrop-filter: blur(15px);
+    padding: 20px 0;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: none;
+}
+
+.mobile-menu.mobile-open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav-link {
+    display: block;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 15px 30px;
+    border-bottom: 1px solid rgba(38, 238, 225, 0.1);
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
+    color: rgb(38, 238, 225);
+    background-color: rgba(38, 238, 225, 0.1);
+}
+
+.mobile-nav-link:last-child {
+    border-bottom: none;
+}
+
 /* 响应式设计 */
-@media (max-width: 1024px) {
-    .menu {
-        height: 70px;
-        justify-content: space-between;
+@media (max-width: 1200px) {
+    .desktop-menu {
+        gap: 30px;
+        margin-left: 40px;
     }
-
-    .logo {
-        margin-right: 20px;
-        font-size: 24px;
+    
+    .nav-link {
+        font-size: 15px;
+        padding: 6px 12px;
     }
+}
 
-    .menu-item {
-        margin: 0 10px;
+@media (max-width: 900px) {
+    .desktop-menu {
+        gap: 20px;
+        margin-left: 30px;
     }
+    
+    .nav-link {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+}
 
-    .menu-item a {
+@media (max-width: 768px) {
+    .desktop-menu {
+        display: none;
+    }
+    
+    .mobile-menu-btn {
+        display: flex;
+    }
+    
+    .mobile-menu {
+        display: block;
+    }
+    
+    .container {
+        padding: 0 20px;
+    }
+    
+    .logo-text {
+        font-size: 20px;
+    }
+    
+    .logo-img {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        height: 60px;
+    }
+    
+    .mobile-menu {
+        top: 60px;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .logo-text {
+        font-size: 18px;
+    }
+    
+    .logo-img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .mobile-nav-link {
         font-size: 16px;
-        padding: 8px 12px;
+        padding: 12px 20px;
     }
 }
 </style>

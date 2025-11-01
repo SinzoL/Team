@@ -18,11 +18,11 @@ import MainVue from './awards/main.vue';
 <style scoped>
 .container {
   position: relative;
-  height: 100vh;
-  /* 确保容器高度占满屏幕 */
+  min-height: 100vh;
+  /* 确保容器最小高度占满屏幕 */
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* 内容样式 */

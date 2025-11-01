@@ -21,5 +21,9 @@ export default {
 </script>
 
 <style scoped>
-
+.content {
+    width: 100%;
+    min-height: calc(100vh - 120px); /* 减去导航栏和页脚的高度 */
+    overflow-y: auto;
+}
 </style>

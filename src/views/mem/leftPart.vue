@@ -1,172 +1,191 @@
 <template>
-  <div class="container">
-      <MemberCard 
-      v-for="(member, index) in members" 
-      :key="index" 
-      :member="member"
-      class="member-item"
-    />
+  <div class="members-showcase">
+    <!-- 成员网格 -->
+    <div class="members-grid">
+      <div 
+        v-for="(member, index) in members" 
+        :key="index"
+        class="member-card-wrapper"
+        :style="{ animationDelay: `${index * 0.1}s` }"
+      >
+        <MemberCard 
+          :member="member"
+          class="enhanced-member-card"
+        />
+      </div>
+    </div>
+    
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>正在加载成员信息...</p>
+    </div>
   </div>
 </template>
 
-
 <script>
-//import MemberCard from '../../components/MemberCard.vue';
 import { defineAsyncComponent } from 'vue'
 
 export default {
-components: { 
-  MemberCard: defineAsyncComponent(() => 
-    import('../../components/MemberCard.vue')
-  )
- },
-props: {
-  title: {
-    type: String,
-    default: '团队成员'
+  components: { 
+    MemberCard: defineAsyncComponent(() => 
+      import('../../components/MemberCard.vue')
+    )
+  },
+  props: {
+    title: {
+      type: String,
+      default: '团队成员'
+    }
+  },
+  data() {
+    return {
+      members: [],
+      loading: true
+    };
+  },
+  async created() {
+    try {
+      this.loading = true;
+      const response = await fetch('/members.json');
+      if (response.ok) {
+        this.members = await response.json();
+      } else {
+        // 使用简化的默认数据
+        this.members = [];
+      }
+    } catch (error) {
+      console.error('加载成员数据失败:', error);
+      this.members = [];
+    } finally {
+      this.loading = false;
+    }
   }
-},
-data() {
-  return {
-    members: []
-  };
-},
-async created() {
-  try {
-    const response = await fetch('/members.json');
-    this.members = await response.json();
-  } catch (error) {
-    console.error('加载成员数据失败:', error);
-    // 可以在这里设置默认数据或显示错误信息
-  }
-}
 }
 </script>
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
-* {
-  margin: 0;
+.members-showcase {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 成员网格 */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
   padding: 0;
-  font-family: "Poppins", sans-serif;
+  justify-items: center;
 }
 
-.link {
-  margin: 10px;
+.member-card-wrapper {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+  transform: translateY(30px);
 }
 
-.github {
-  margin: 20px;
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.github img,
-.blog img {
-  transition: transform 0.3s, filter 0.3s;
+.enhanced-member-card {
+  transition: all 0.3s ease;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.github:hover img,
-.blog:hover img {
-  transform: scale(1.2);
-  /* 放大图标 */
-  filter: brightness(1.5);
-  /* 增加亮度 */
+.enhanced-member-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.container {
-    display: flex;
-    /* 改为顶部对齐 */
-    flex-wrap: wrap;
-    flex-direction: row;
-    gap: 20px;
-    padding: 20px;
-    padding-top: 30px;
-    padding-right: 0px;
-    margin-top: 2%;
-    /* 给容器上方留点空间 */
+
+
+/* 加载状态 */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.container .card {
-    position: relative;
-    max-width: 300px;
-    border-radius: 20px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.8); /* 半透明背景 */
-    margin: 10px 10px;
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(38, 238, 225, 0.3);
+  border-top: 3px solid #26eee1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .members-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .members-showcase {
     padding: 20px 15px;
-    display: flex;
+  }
+  
+  .controls-section {
+    margin-bottom: 30px;
+  }
+  
+  .members-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .filter-tabs {
+    gap: 8px;
+  }
+  
+  .filter-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .members-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .search-input {
+    padding: 12px 40px 12px 15px;
+    font-size: 14px;
+  }
+  
+  .filter-tabs {
     flex-direction: column;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-    transition: 0.3s ease-in-out;
-    z-index: 2;
-    backdrop-filter: blur(10px);
-}
-
-.container .card:hover {
-    height: 420px;
-    background: rgba(255, 255, 255, 1); /* 悬停时更亮 */
-}
-
-.container .card .imgBx {
-    position: relative;
-    width: 240px;
-    height: 240px;
-    top: -60px;
-    left: 30px;
-    z-index: 1;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* 头像大小 */
-.container .card .imgBx img {
-    /*max-width: 100%;*/
-    height: 240px;
-    width: 240px;
-    border-radius: 50%;
-    object-fit: cover;
-    /* 保持图片比例，防止变形 */
-}
-
-.imgBx:hover {
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-
-.container .card .content {
-    position: relative;
-    margin-top: -140px;
-    padding: 10px 15px;
-    text-align: center;
-    color: #111;
-    visibility: hidden;
-    opacity: 0;
-    transition: 0.3s ease-in-out;
-}
-.container .card:hover .content {
-  visibility: visible;
-  opacity: 1;
-  margin-top: -40px;
-  transition-delay: 0.3s;
-}
-
-@media(max-width: 800px) {
-  .container .card {
-      width: 210px;
-      height: 140px;
+    align-items: center;
   }
-
-  .container .card:hover {
-      height: 196px;
-  }
-
-  .container .card .imgBx {
-      width: 168px;
-      height: 168px;
-  }
-
-  .container .card .imgBx img {
-      width: 182px;
-      height: 182px;
+  
+  .filter-btn {
+    min-width: 120px;
   }
 }
+
+
 </style>

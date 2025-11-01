@@ -1,18 +1,4 @@
 @font-face {
-    font-family: 'Gochfont';
-    src: url('./GochiHand-Regular.ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Soufont';
-    src: url('./No.019-Sounso-Quality-2.ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
     font-family: 'Departure';
     src: url('./Departure.otf');
     font-weight: normal;
@@ -22,13 +8,6 @@
 @font-face {
     font-family: 'JetBrains Mono';
     src: url('./JetBrainsMonoNerdFont-Medium.ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Gohu';
-    src: url('./GohuFont14NerdFont-Regular.ttf');
     font-weight: normal;
     font-style: normal;
 }
